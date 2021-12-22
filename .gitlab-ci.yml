@@ -7,6 +7,11 @@ cache: &global_cache
     - .terraform
   policy: pull-push
 
+before_script:
+  - export ${AWS_ACCESS_KEY}
+  - export ${AWS_SECRET_KEY}
+  - export TF_IN_AUTOMATION=true
+
 stages:
   - tfBackend
   - tfplan
@@ -17,10 +22,6 @@ stages:
   - termination
 
 TfRemotebackend:
-  before_script:
-    - export ${AWS_ACCESS_KEY}
-    - export ${AWS_SECRET_KEY}
-    - export TF_IN_AUTOMATION=true
   tags:
     - aws
   stage: tfBackend
@@ -34,13 +35,9 @@ TfRemotebackend:
     # We could use -plugin-dir tf-plugins to minimize the terraform init time.
 
     - terraform -chdir=./infrastructure/tfbackend init
-    - terraform -chdir=./infrastructure/terraform apply -auto-approve
+    - terraform -chdir=./infrastructure/tfbackend apply -auto-approve
 
 InfraProvisionerPlan:
-  before_script:
-    - export ${AWS_ACCESS_KEY}
-    - export ${AWS_SECRET_KEY}
-    - export TF_IN_AUTOMATION = true
   tags:
     - aws
   stage: tfplan
@@ -61,10 +58,6 @@ InfraProvisionerPlan:
     expire_in: 2 hours
 
 InfraProvisionerApply:
-  before_script:
-    - export ${AWS_ACCESS_KEY}
-    - export ${AWS_SECRET_KEY}
-    - export TF_IN_AUTOMATION = true
   tags:
     - aws
   stage: tfapply
@@ -95,10 +88,6 @@ ApplicationImage:
     - develop
 
 DeploymentPlan:
-  before_script:
-    - export ${AWS_ACCESS_KEY}
-    - export ${AWS_SECRET_KEY}
-    - export TF_IN_AUTOMATION = true
   tags:
     - aws
   stage: deploymentplan
@@ -124,10 +113,6 @@ DeploymentApply:
     entrypoint:
       - "/usr/bin/env"
       - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-  before_script:
-    - export ${AWS_ACCESS_KEY}
-    - export ${AWS_SECRET_KEY}
-    - export TF_IN_AUTOMATION = true
 
   script:
     - terraform -chdir=./deplyoment/terraform init
@@ -148,10 +133,6 @@ AppTermination:
     entrypoint:
       - "/usr/bin/env"
       - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-  before_script:
-    - export ${AWS_ACCESS_KEY}
-    - export ${AWS_SECRET_KEY}
-    - export TF_IN_AUTOMATION = true
 
   script:
     - terraform -chdir=./deplyoment/terraform destroy -auto-approve
@@ -169,10 +150,6 @@ InfraTermination:
     entrypoint:
       - "/usr/bin/env"
       - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-  before_script:
-    - export ${AWS_ACCESS_KEY}
-    - export ${AWS_SECRET_KEY}
-    - export TF_IN_AUTOMATION = true
 
   script:
     - terraform -chdir=./infrastructure/k8s destroy -auto-approve
