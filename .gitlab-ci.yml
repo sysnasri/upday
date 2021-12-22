@@ -9,9 +9,9 @@ cache: &global_cache
 
 before_script:
   - export TF_IN_AUTOMATION=true
-  - export TF_VAR_APPLICATION_KEY=${APPLICATION_KEY}
-  - export TF_VAR_APPLICATION_SECRET=${APPLICATION_SECRET}
-  - export TF_VAR_CONSUMER_KEY=${CONSUMER_KEY}
+  - export TF_VAR_application_key=${APPLICATION_KEY}
+  - export TF_VAR_application_secret=${APPLICATION_SECRET}
+  - export TF_VAR_consumer_key=${CONSUMER_KEY}
 
 stages:
   - tfBackend
