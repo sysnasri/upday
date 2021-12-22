@@ -38,7 +38,7 @@ variable "service_type" {
   default = "ClusterIP"
 }
 variable "image" {
-  default = "nginx"
+  default = "nasri/upday-java:v1"
 }
 variable "containerport" {
   default = [{

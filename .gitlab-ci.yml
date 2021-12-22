@@ -8,9 +8,10 @@ cache: &global_cache
   policy: pull-push
 
 before_script:
-  - export ${AWS_ACCESS_KEY}
-  - export ${AWS_SECRET_KEY}
   - export TF_IN_AUTOMATION=true
+  - export TF_VAR_APPLICATION_KEY=${APPLICATION_KEY}
+  - export TF_VAR_APPLICATION_SECRET=${APPLICATION_SECRET}
+  - export TF_VAR_CONSUMER_KEY=${CONSUMER_KEY}
 
 stages:
   - tfBackend
@@ -35,8 +36,8 @@ TfRemotebackend:
     # We could use -plugin-dir tf-plugins to minimize the terraform init time.
     - export AWS_DEFAULT_REGION=us-east-1
     - terraform -chdir=./infrastructure/tfbackend init
-    - terraform -chdir=./infrastructure/tfbackend apply -auto-
-  when: manual
+    - terraform -chdir=./infrastructure/tfbackend apply -auto-approve
+  # when: manual
   only:
     - develop
 
@@ -57,7 +58,7 @@ InfraProvisionerPlan:
     - develop
   artifacts:
     paths:
-      - "infraPlanFile"
+      - "./infrastructure/k8s/infraPlanFile"
     expire_in: 2 hours
 
 InfraProvisionerApply:
@@ -104,7 +105,7 @@ DeploymentPlan:
     - terraform -chdir=./deployment/terraform plan -input=false -out "AppPlanFile"
   artifacts:
     paths:
-      - "AppPlanFile"
+      - "./deployment/terraform/AppPlanFile"
     expire_in: 2 hours
 
 DeploymentApply:
