@@ -101,7 +101,6 @@ DeploymentPlan:
       - "/usr/bin/env"
       - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
   script:
-    - 
     - terraform -chdir=./deployment/terraform init
     - terraform -chdir=./deployment/terraform plan -input=false -out "AppPlanFile"
   dependencies:
