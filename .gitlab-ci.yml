@@ -33,8 +33,8 @@ TfRemotebackend:
   script:
     # We could use -plugin-dir tf-plugins to minimize the terraform init time.
 
-    - terraform -chdir=infrastructure/tfbackend init
-    - terraform -chdir=infrastructure/terraform apply -auto-approve
+    - terraform -chdir=./infrastructure/tfbackend init
+    - terraform -chdir=./infrastructure/terraform apply -auto-approve
 
 InfraProvisionerPlan:
   before_script:
@@ -50,8 +50,8 @@ InfraProvisionerPlan:
       - "/usr/bin/env"
       - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
   script:
-    - terraform -chdir=infrastructure/k8s init
-    - terraform -chdir=infrastructure/k8s plan -input=false -out "infraPlanFile"
+    - terraform -chdir=./infrastructure/k8s init
+    - terraform -chdir=./infrastructure/k8s plan -input=false -out "infraPlanFile"
 
   only:
     - develop
@@ -74,8 +74,8 @@ InfraProvisionerApply:
       - "/usr/bin/env"
       - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
   script:
-    - terraform -chdir=infrastructure/k8s init
-    - terraform -chdir=infrastructure/k8s apply -input=false "infraPlanFile"
+    - terraform -chdir=./infrastructure/k8s init
+    - terraform -chdir=./infrastructure/k8s apply -input=false "infraPlanFile"
   dependencies:
     - "InfraProvisionerPlan"
   when: manual
@@ -108,8 +108,8 @@ DeploymentPlan:
       - "/usr/bin/env"
       - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
   script:
-    - terraform -chdir=deplyoment/terraform init
-    - terraform -chdir=deplyoment/terraform apply -input=false "AppPlanFile"
+    - terraform -chdir=./deplyoment/terraform init
+    - terraform -chdir=./deplyoment/terraform apply -input=false "AppPlanFile"
   artifacts:
     paths:
       - "AppPlanFile"
@@ -130,8 +130,8 @@ DeploymentApply:
     - export TF_IN_AUTOMATION = true
 
   script:
-    - terraform -chdir=deplyoment/terraform init
-    - terraform -chdir=deplyoment/terraform apply -input=false "AppPlanFile"
+    - terraform -chdir=./deplyoment/terraform init
+    - terraform -chdir=./deplyoment/terraform apply -input=false "AppPlanFile"
 
   when: manual
   only:
@@ -154,7 +154,7 @@ AppTermination:
     - export TF_IN_AUTOMATION = true
 
   script:
-    - terraform -chdir=deplyoment/terraform destroy -auto-approve
+    - terraform -chdir=./deplyoment/terraform destroy -auto-approve
 
   when: manual
   only:
@@ -175,7 +175,9 @@ InfraTermination:
     - export TF_IN_AUTOMATION = true
 
   script:
-    - terraform -chdir=infrastructure/k8s destroy -auto-approve
+    - terraform -chdir=./infrastructure/k8s destroy -auto-approve
+  dependencies:
+    - AppTermination
 
   when: manual
   only:
