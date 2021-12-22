@@ -1,0 +1,181 @@
+variables:
+  TERRAFORM_WORKSPACE: development
+cache: &global_cache
+  key: "$CI_PROJECT_NAME"
+  paths:
+    - .terraform
+  policy: pull-push
+
+stages:
+  - tfBackend
+  - tfplan
+  - tfapply
+  - containerization
+  - deploymentplan
+  - deploymentapply
+  - termination
+
+TfRemotebackend:
+  before_script:
+    - export ${AWS_ACCESS_KEY}
+    - export ${AWS_SECRET_KEY}
+    - export TF_IN_AUTOMATION=true
+  tags:
+    - aws
+  stage: tfBackend
+  allow_failure: true
+  image:
+    name: hashicorp/terraform
+    entrypoint:
+      - "/usr/bin/env"
+      - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+  script:
+    # We could use -plugin-dir tf-plugins to minimize the terraform init time.
+
+    - terraform -chdir=infrastructure/tfbackend init
+    - terraform -chdir=infrastructure/terraform apply -auto-approve
+
+InfraProvisionerPlan:
+  before_script:
+    - export ${AWS_ACCESS_KEY}
+    - export ${AWS_SECRET_KEY}
+    - export TF_IN_AUTOMATION = true
+  tags:
+    - aws
+  stage: tfplan
+  image:
+    name: hashicorp/terraform
+    entrypoint:
+      - "/usr/bin/env"
+      - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+  script:
+    - terraform -chdir=infrastructure/k8s init
+    - terraform -chdir=infrastructure/k8s plan -input=false -out "infraPlanFile"
+
+  only:
+    - development
+  artifacts:
+    paths:
+      - "infraPlanFile"
+    expire_in: 2 hours
+
+InfraProvisionerApply:
+  before_script:
+    - export ${AWS_ACCESS_KEY}
+    - export ${AWS_SECRET_KEY}
+    - export TF_IN_AUTOMATION = true
+  tags:
+    - aws
+  stage: tfapply
+  image:
+    name: hashicorp/terraform
+    entrypoint:
+      - "/usr/bin/env"
+      - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+  script:
+    - terraform -chdir=infrastructure/k8s init
+    - terraform -chdir=infrastructure/k8s apply -input=false "infraPlanFile"
+  dependencies:
+    - "tfplan"
+  when: manual
+  only:
+    - development
+
+ApplicationImage:
+  tags:
+    - "aws"
+  stage: containerization
+  image: docker:19.03.12
+  script:
+    - docker login -u $REGISTRY_USERNAME -p $REGISTRY_PASSWORD
+    - docker build -f Dockerfile -t nasri/python-app:${APPLICATION_VERSION} .
+    - docker push nasri/upday-java:${APPLICATION_VERSION}
+  only:
+    - development
+
+DeploymentPlan:
+  before_script:
+    - export ${AWS_ACCESS_KEY}
+    - export ${AWS_SECRET_KEY}
+    - export TF_IN_AUTOMATION = true
+  tags:
+    - aws
+  stage: deploymentplan
+  image:
+    name: hashicorp/terraform
+    entrypoint:
+      - "/usr/bin/env"
+      - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+  script:
+    - terraform -chdir=deplyoment/terraform init
+    - terraform -chdir=deplyoment/terraform apply -input=false "AppPlanFile"
+  artifacts:
+    paths:
+      - "AppPlanFile"
+    expire_in: 2 hours
+
+DeploymentApply:
+  tags:
+    - "aws"
+  stage: deploymentapply
+  image:
+    name: hashicorp/terraform
+    entrypoint:
+      - "/usr/bin/env"
+      - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+  before_script:
+    - export ${AWS_ACCESS_KEY}
+    - export ${AWS_SECRET_KEY}
+    - export TF_IN_AUTOMATION = true
+
+  script:
+    - terraform -chdir=deplyoment/terraform init
+    - terraform -chdir=deplyoment/terraform apply -input=false "AppPlanFile"
+
+  when: manual
+  only:
+    - main
+  dependencies:
+    - DeploymentPlan
+
+AppTermination:
+  tags:
+    - "aws"
+  stage: termination
+  image:
+    name: hashicorp/terraform
+    entrypoint:
+      - "/usr/bin/env"
+      - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+  before_script:
+    - export ${AWS_ACCESS_KEY}
+    - export ${AWS_SECRET_KEY}
+    - export TF_IN_AUTOMATION = true
+
+  script:
+    - terraform -chdir=deplyoment/terraform destroy -auto-approve
+
+  when: manual
+  only:
+    - development
+
+InfraTermination:
+  tags:
+    - "aws"
+  stage: termination
+  image:
+    name: hashicorp/terraform
+    entrypoint:
+      - "/usr/bin/env"
+      - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+  before_script:
+    - export ${AWS_ACCESS_KEY}
+    - export ${AWS_SECRET_KEY}
+    - export TF_IN_AUTOMATION = true
+
+  script:
+    - terraform -chdir=infrastructure/k8s destroy -auto-approve
+
+  when: manual
+  only:
+    - development
