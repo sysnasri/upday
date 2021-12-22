@@ -1,6 +1,6 @@
 module "ingress" {
   source            = "./modules/ingress"
-  service_name      = var.app_name
+  service_name      = var.service_name
   service_namespace = var.default_namespace
   rule = [
     {

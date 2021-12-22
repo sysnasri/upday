@@ -29,7 +29,7 @@ variable "annotations" {
   default     = {}
 }
 locals {
-  labels = var.custom_labels == null ? { app = var.service_name } : var.custom_labels
+  labels = var.custom_labels == null ? { app = var.app_name } : var.custom_labels
 }
 variable "custom_labels" {
   description = "(Optional) Custom labels & selector"
