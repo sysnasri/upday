@@ -1,5 +1,6 @@
 variables:
   TERRAFORM_WORKSPACE: development
+  APPLICATION_VERSION: v1
 cache: &global_cache
   key: "$CI_PROJECT_NAME"
   paths:
@@ -53,7 +54,7 @@ InfraProvisionerPlan:
     - terraform -chdir=infrastructure/k8s plan -input=false -out "infraPlanFile"
 
   only:
-    - development
+    - develop
   artifacts:
     paths:
       - "infraPlanFile"
@@ -76,10 +77,10 @@ InfraProvisionerApply:
     - terraform -chdir=infrastructure/k8s init
     - terraform -chdir=infrastructure/k8s apply -input=false "infraPlanFile"
   dependencies:
-    - "tfplan"
+    - "InfraProvisionerPlan"
   when: manual
   only:
-    - development
+    - develop
 
 ApplicationImage:
   tags:
@@ -88,10 +89,10 @@ ApplicationImage:
   image: docker:19.03.12
   script:
     - docker login -u $REGISTRY_USERNAME -p $REGISTRY_PASSWORD
-    - docker build -f Dockerfile -t nasri/python-app:${APPLICATION_VERSION} .
+    - docker build -f application/Dockerfile -t nasri/upday-java:${APPLICATION_VERSION} .
     - docker push nasri/upday-java:${APPLICATION_VERSION}
   only:
-    - development
+    - develop
 
 DeploymentPlan:
   before_script:
@@ -134,7 +135,7 @@ DeploymentApply:
 
   when: manual
   only:
-    - main
+    - develop
   dependencies:
     - DeploymentPlan
 
@@ -157,7 +158,7 @@ AppTermination:
 
   when: manual
   only:
-    - development
+    - develop
 
 InfraTermination:
   tags:
@@ -178,4 +179,4 @@ InfraTermination:
 
   when: manual
   only:
-    - development
+    - develop
