@@ -95,7 +95,9 @@ ApplicationChart:
   tags:
     - "aws"
   stage: lint
-  image: alpine/helm
+  image:
+    name: alpine/helm
+    entrypoint: [""]
   script:
     - helm lint ./deplyoment/charts/upday
     - helm template ./deplyoment/charts/upday
