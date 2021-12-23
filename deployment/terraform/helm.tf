@@ -7,13 +7,14 @@ provider "helm" {
   }
 }
 resource "helm_release" "nginx_ingress" {
-  name              = "nginx-ingress-controller"
-  repository        = "https://charts.bitnami.com/bitnami"
-  chart             = "nginx-ingress-controller"
+  name              = "ingress-nginx"
+  repository        = "https://kubernetes.github.io/ingress-nginx"
+  chart             = "ingress-nginx"
   namespace         = "nginx-ingress"
   create_namespace  = true
-  force_update      = true
   dependency_update = true
+
+
 
   set {
     name  = "service.type"
@@ -21,18 +22,38 @@ resource "helm_release" "nginx_ingress" {
 
   }
   set {
+    name  = "controller.service.targetPorts.https"
+    value = "http"
+  }
+  set {
+    name  = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-backend-protocol"
+    value = "http"
+  }
+  set {
+    name  = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-ssl-ports"
+    value = "https"
 
-    name  = "nginx.ingress.kubernetes\\.io/ssl-redirect"
+  }
+  set {
+
+    name  = "controller.service.annotations.service\\.ingress\\.kubernetes\\.io/ssl-redirect"
+    value = "true"
+
+
+  }
+  set {
+    name  = "controller.service.annotations.service\\.ingress\\.kubernetes\\.io/force-ssl-redirect"
     value = "true"
 
   }
   set {
-    name  = "nginx.ingress.kubernetes\\.io/force-ssl-redirect"
-    value = "true"
-  }
-  set {
-    name  = "nginx.ingress.kubernetes\\.io/rewrite-target"
+    name  = "controller.service.annotations.service\\.ingress\\.kubernetes\\.io/rewrite-target"
     value = "/"
+
+  }
+  set {
+    name  = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-ssl-cert"
+    value = aws_acm_certificate.upday-cert.arn
   }
 
 

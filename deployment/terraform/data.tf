@@ -1,6 +1,6 @@
 data "kubernetes_service" "nginx-ingress-svc" {
   metadata {
-    name      = "nginx-ingress-controller"
+    name      = "ingress-nginx-controller"
     namespace = helm_release.nginx_ingress.namespace
   }
 }

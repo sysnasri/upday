@@ -20,3 +20,13 @@ resource "ovh_domain_zone_record" "upday_cname_record" {
   ]
 
 }
+
+resource "ovh_domain_zone_record" "upday_tls_record" {
+  zone      = lookup(var.domain_name, "zone")
+  subdomain = tolist(aws_acm_certificate.upday-cert.domain_validation_options)[0].resource_record_name
+  fieldtype = "CNAME"
+  ttl       = "3600"
+  target    = tolist(aws_acm_certificate.upday-cert.domain_validation_options)[0].resource_record_value
+
+
+}
