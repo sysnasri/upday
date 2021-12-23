@@ -16,7 +16,7 @@ resource "ovh_domain_zone_record" "upday_cname_record" {
   ttl       = "3600"
   target    = "${data.kubernetes_service.nginx-ingress-svc.status.0.load_balancer.0.ingress.0.hostname}."
   depends_on = [
-    module.ingress
+    helm_release.upday
   ]
 
 }

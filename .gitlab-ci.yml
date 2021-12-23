@@ -18,6 +18,7 @@ stages:
   - tfplan
   - tfapply
   - containerization
+  - lint
   - deploymentplan
   - deploymentapply
   - termination
@@ -90,7 +91,17 @@ ApplicationImage:
     - docker push nasri/upday-java:${APPLICATION_VERSION}
   only:
     - develop
+ApplicationChart:
+  tags:
+    - "aws"
+  stage: lint
+  image: alpine/helm
+  script:
+    - helm lint ./deplyoment/charts/upday
+    - helm template ./deplyoment/charts/upday
 
+  only:
+    - develop
 DeploymentPlan:
   tags:
     - aws

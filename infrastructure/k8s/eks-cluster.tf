@@ -22,6 +22,7 @@ module "eks" {
   worker_groups = [
     {
       name                          = "worker-group-1"
+      asg_max_size                  = var.asg_max_instance
       instance_type                 = var.worker_instance_type
       asg_desired_capacity          = var.desired_capacity
       additional_security_group_ids = [aws_security_group.worker_group_mgmt_one.id]

@@ -7,7 +7,7 @@ variable "aws_secret_key" {
 
 variable "region" {
   type        = string
-  default     = "us-west-2"
+  default     = "eu-south-1"
   description = "AWS region"
 }
 variable "cluster_name" {
@@ -33,10 +33,11 @@ variable "private_subnet_cidr" {
 variable "desired_capacity" {
   default = 3
 }
+variable "asg_max_instance" {
+  default = 5
+
+}
 variable "worker_instance_type" {
-  default = "t3.micro"
+  default = "t3.small"
 }
-variable "ingress" {
-  type    = string
-  default = "https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.0.4/deploy/static/provider/aws/deploy.yaml"
-}
+
