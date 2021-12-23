@@ -91,10 +91,10 @@ ApplicationImage:
     - docker push nasri/upday-java:${APPLICATION_VERSION}
   only:
     - develop
-ApplicationChart:
+ChartLint:
   tags:
     - "aws"
-  stage: lint
+  stage: containerization
   image:
     name: alpine/helm
     entrypoint: [""]
