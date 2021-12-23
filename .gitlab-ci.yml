@@ -99,8 +99,8 @@ ApplicationChart:
     name: alpine/helm
     entrypoint: [""]
   script:
-    - helm lint ./deplyoment/charts/upday
-    - helm template ./deplyoment/charts/upday
+    - helm lint ./deployment/charts/upday
+    - helm template ./deployment/charts/upday
 
   only:
     - develop
