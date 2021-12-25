@@ -38,7 +38,7 @@ TfRemotebackend:
     - export AWS_DEFAULT_REGION=us-east-1
     - terraform -chdir=./infrastructure/tfbackend init
     - terraform -chdir=./infrastructure/tfbackend apply -auto-approve
-  # when: manual
+  when: manual
   only:
     - develop
 
