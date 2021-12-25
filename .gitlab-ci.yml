@@ -32,7 +32,7 @@ TfRemotebackend:
     name: hashicorp/terraform
     entrypoint:
       - "/usr/bin/env"
-      - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+      - "PATH=/usr/local/sbin :/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
   script:
     # We could use -plugin-dir tf-plugins to minimize the terraform init time.
     - export AWS_DEFAULT_REGION=us-east-1
@@ -172,7 +172,7 @@ InfraTermination:
 
   script:
     - terraform -chdir=./infrastructure/k8s destroy -auto-approve
-  dependencies:
+  needs:
     - AppTermination
 
   when: manual
