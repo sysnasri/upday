@@ -116,7 +116,7 @@ DeploymentPlan:
   script:
     - terraform -chdir=./deployment/terraform init
     - terraform -chdir=./deployment/terraform plan -input=false -out "AppPlanFile"
-  dependencies:
+  needs:
     - InfraProvisionerApply
   artifacts:
     paths:

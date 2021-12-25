@@ -6,14 +6,14 @@ avaialbe Kuberentes cluster on AWS to deploy applications via Helm charts/provid
 ## Important attention
 
 ```
-This scenario is not using Route53 instead using OVH dns, because my apex domai "nasri.it" is hosted on OVH.
+This scenario is not using Route53 instead using OVH dns, because my apex domain "nasri.it" is hosted on OVH.
 In this scenior a CNAME "upday" is going to created and pointed to aws application load balancer.  
 
 ```
 
 ## Description
 
-A java application which is built via a Dockerfile in gitlab-ci, is going to be packed with helm chart! the charts is linted during the deployment and if it finds an error it wont deploy it. nginx-ingress controller, metricserver, application chart are implemented in this scenario, finally the application is exposed via upday.nasri.it with a valid tls certificate on top of AWS/ACM and then http is redirected to https. 
+A java application which is built by a Dockerfile in gitlab-ci, is going to be packed with helm chart! the chart is linted during the deployment and if it finds an error it wont deploy it. nginx-ingress controller, metricserver, application chart are implemented in this scenario, finally the application is exposed via upday.nasri.it with a valid tls certificate on top of AWS/ACM and then http is redirected to https. 
 
 ## Dependencies 
 You need to install these tools ***git, terraform, helm, aws-iam-authenticator*** before starting to use this repository. 
