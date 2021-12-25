@@ -7,7 +7,7 @@ avaialbe Kuberentes cluster on AWS to deploy applications via Helm charts/provid
 
 ```
 This scenario is not using Route53 instead using OVH dns, because my apex domain "nasri.it" is hosted on OVH.
-In this scenior a CNAME "upday" is going to created and pointed to aws application load balancer.  
+In this scenior a CNAME "upday" is going to be created and pointed to aws application load balancer.  
 
 ```
 
@@ -33,7 +33,7 @@ AWS_ACCESS_KEY
 AWS_SECRET_KEY
 AWS_DEFAULT_REGION
 
-Set these variables if your DNS Server is  hosted on OVH, If you are using Route53 they are not needed. 
+
 
 #########  OVH athentication #########
 
@@ -43,6 +43,7 @@ consumer_key
 
 ```
 OVH variables are exported into gitlab with TF_VAR format, please refer to .gitlab-ci.yml
+Set these variables if your DNS Server is hosted on OVH, otherwise you need to use [aws_route53_zone](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_zone) and adjust ./deployment/terraform/records.tf
 
 
 ## Getting Started
