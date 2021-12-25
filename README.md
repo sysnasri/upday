@@ -6,8 +6,8 @@ avaialbe Kuberentes cluster on AWS to deploy applications via Helm charts/provid
 ## Important attention
 
 ```
-This scenario is not using Route53 instead using OVH dns, because my apex domain "nasri.it" is hosted on OVH.
-In this scenior a CNAME "upday" is going to be created and pointed to aws application load balancer.  
+This scenario des not uses Route53 instead uses OVH DNS, because my apex domain "nasri.it" is hosted on OVH.
+In this scenario a CNAME "upday" is going to be created and pointed to aws application load balancer.  
 
 ```
 
