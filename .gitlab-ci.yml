@@ -122,6 +122,8 @@ DeploymentPlan:
     paths:
       - "./deployment/terraform/AppPlanFile"
     expire_in: 2 hours
+  only:
+    - develop
 
 DeploymentApply:
   tags:
@@ -172,7 +174,7 @@ InfraTermination:
       - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
   script:
-    - terraform -chdir=./infrastructure/k8s init 
+    - terraform -chdir=./infrastructure/k8s init
     - terraform -chdir=./infrastructure/k8s destroy -auto-approve
   needs:
     - AppTermination
