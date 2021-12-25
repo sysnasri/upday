@@ -1,6 +1,12 @@
 ################################################
 # Outputs for showing contents 
 ################################################
+
+# Output values make information about your infrastructure available on the command line, 
+# and can expose information for other Terraform configurations to use.
+# output values are similar to return values in programming languages.
+
+
 output "cluster_id" {
   description = "EKS cluster ID."
   value       = module.eks.cluster_id

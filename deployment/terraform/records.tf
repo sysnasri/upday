@@ -1,5 +1,5 @@
 ################################################
-#  Creating a CNAME Record in OVH
+#  Creates a CNAME Record in OVH
 ################################################
 provider "ovh" {
   endpoint           = "ovh-eu"
@@ -8,6 +8,7 @@ provider "ovh" {
   consumer_key       = var.consumer_key
 
 }
+# Provides a OVH domain zone record.
 
 resource "ovh_domain_zone_record" "upday_cname_record" {
   zone      = lookup(var.domain_name, "zone")
@@ -20,6 +21,8 @@ resource "ovh_domain_zone_record" "upday_cname_record" {
   ]
 
 }
+
+# Provides a OVH domain zone record for TLS record
 
 resource "ovh_domain_zone_record" "upday_tls_record" {
   zone      = lookup(var.domain_name, "zone")

@@ -1,9 +1,5 @@
-variable "aws_access_key" {
-  default = null
-}
-variable "aws_secret_key" {
-  default = null
-}
+# serve as parameters for a Terraform module,
+# so users can customize behavior without editing the source.
 
 variable "application_key" {
   default = null

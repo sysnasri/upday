@@ -1,3 +1,7 @@
+#######################################################################
+##### Set appropriate bucketname and key fore terraform backend #######
+#######################################################################
+
 terraform {
   backend "s3" {
     bucket         = "upday-terraform-state-files"

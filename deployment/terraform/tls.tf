@@ -1,3 +1,5 @@
+# The ACM certificate resource allows requesting and management of certificates 
+# from the Amazon Certificate Manager.
 
 resource "aws_acm_certificate" "upday-cert" {
   domain_name       = var.domain_name.fqdn
@@ -11,6 +13,8 @@ resource "aws_acm_certificate" "upday-cert" {
     create_before_destroy = true
   }
 }
+# This resource represents a successful validation of 
+# an ACM certificate in concert with other resources.
 
 resource "aws_acm_certificate_validation" "upday" {
   certificate_arn         = aws_acm_certificate.upday-cert.arn

@@ -1,10 +1,4 @@
-
-
-
-
-data "aws_availability_zones" "available" {}
-
-
+# Terraform module which creates VPC resources on AWS
 
 resource "random_string" "suffix" {
   length  = 8
@@ -16,7 +10,7 @@ module "vpc" {
   version = "3.2.0"
 
 
-  name                 = "education-vpc"
+  name                 = "${var.environment_tag}-vpc"
   cidr                 = var.vpc_cidr
   azs                  = data.aws_availability_zones.available.names
   private_subnets      = cidrsubnets(var.private_subnet_cidr, 2, 2, 2) #["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"] #

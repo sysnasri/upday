@@ -1,3 +1,7 @@
+# Anywhere that Terraform lets you specify a range of acceptable versions for something, 
+# it expects a specially formatted string known as a version constraint.
+# Version constraints are used when configuring:
+
 terraform {
 
   required_providers {

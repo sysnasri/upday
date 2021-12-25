@@ -1,3 +1,6 @@
+# The Helm provider is used to deploy software packages in Kubernetes. 
+# The provider needs to be configured with the proper credentials before it can be used.
+
 provider "helm" {
   kubernetes {
     host                   = data.aws_eks_cluster.eks.endpoint
@@ -6,6 +9,10 @@ provider "helm" {
 
   }
 }
+# A Release is an instance of a chart running in a Kubernetes cluster.
+# A Chart is a Helm package. It contains all of the resource definitions necessary
+# to run an application, tool, or service inside of a Kubernetes cluster.
+
 resource "helm_release" "nginx_ingress" {
   name              = "ingress-nginx"
   repository        = "https://kubernetes.github.io/ingress-nginx"
@@ -15,6 +22,7 @@ resource "helm_release" "nginx_ingress" {
   dependency_update = true
 
 
+  # Value block with custom values to be merged with the values yaml.
 
   set {
     name  = "service.type"
@@ -34,23 +42,8 @@ resource "helm_release" "nginx_ingress" {
     value = "https"
 
   }
-  set {
-
-    name  = "controller.service.annotations.service\\.ingress\\.kubernetes\\.io/ssl-redirect"
-    value = "true"
 
 
-  }
-  set {
-    name  = "controller.service.annotations.service\\.ingress\\.kubernetes\\.io/force-ssl-redirect"
-    value = "true"
-
-  }
-  set {
-    name  = "controller.service.annotations.service\\.ingress\\.kubernetes\\.io/rewrite-target"
-    value = "/"
-
-  }
   set {
     name  = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-ssl-cert"
     value = aws_acm_certificate.upday-cert.arn
@@ -58,7 +51,6 @@ resource "helm_release" "nginx_ingress" {
 
 
 }
-
 
 
 
@@ -77,4 +69,6 @@ resource "helm_release" "metricserver" {
 resource "helm_release" "upday" {
   name  = "upday-chart"
   chart = "../charts/upday"
+
+
 }
