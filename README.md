@@ -109,7 +109,7 @@ cd ./deployment/terraform
 
 
 
-## Want to collebrate? 
+## Want to collaborate? 
 
 Try to fork the project and request a merge! 
 
