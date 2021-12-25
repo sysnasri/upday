@@ -107,7 +107,17 @@ cd ./deployment/terraform
 
 ```
 
+### Termination Phase 
+You can destroy two phases but remember you have to destroy Deployment phase at first and then destroy EKS later. 
 
+```
+cd ./deployment/terraform
+    terraform destory -var-file=/home/secrets/terraform.tfvars
+
+cd ./infrastructure/k8s 
+    terraform destory -var-file=/home/secrets/terraform.tfvars
+
+```
 
 ## Want to collaborate? 
 
