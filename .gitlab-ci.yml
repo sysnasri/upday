@@ -74,8 +74,13 @@ InfraProvisionerApply:
   script:
     - terraform -chdir=./infrastructure/k8s init
     - terraform -chdir=./infrastructure/k8s apply -input=false "infraPlanFile"
-  dependencies:
-    - "InfraProvisionerPlan"
+  artifacts:
+    paths:
+      - kubeconfig*
+    expire_in: 2 days
+  needs:
+    - job: "InfraProvisionerPlan"
+      artifacts: true
   when: manual
   only:
     - develop
@@ -142,8 +147,9 @@ DeploymentApply:
   when: manual
   only:
     - develop
-  dependencies:
-    - DeploymentPlan
+  needs:
+    - job: DeploymentPlan
+      artifacts: true
 
 AppTermination:
   tags:

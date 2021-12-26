@@ -27,7 +27,7 @@ git clone https://git.nasri.it/nasri/upday
 
 Before start working with CLI or gitlab-ci the following variables must be set. you can put them in a tfvar file outside of repository folder and then refer to it later.
 ```
-#########  AWS athentication #########
+#########  AWS authentication #########
 
 AWS_ACCESS_KEY 
 AWS_SECRET_KEY
@@ -35,7 +35,7 @@ AWS_DEFAULT_REGION
 
 
 
-#########  OVH athentication #########
+#########  OVH authentication #########
 
 application_key  
 application_secret
