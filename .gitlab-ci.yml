@@ -76,7 +76,7 @@ InfraProvisionerApply:
     - terraform -chdir=./infrastructure/k8s apply -input=false "infraPlanFile"
   artifacts:
     paths:
-      - kubeconfig*
+      - ./infrastructure/k8s/kubeconfig*
     expire_in: 2 days
   needs:
     - job: "InfraProvisionerPlan"
