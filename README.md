@@ -95,6 +95,8 @@ Helm is used to pack the k8s manifest/yaml files and uses a templating strucutre
 
 * Deployment,Ingress,service,PodDisruptionBudget,HorizentalAutoscaling template files are located in template directory. 
 
+* Startup/Liveness/Readyness Probes, NodeAffinity, HPA, PDB, non-root, Offload TLS are implemented.
+
 * With terraform helm provider metricserver,ingress-enginx,application chart is going to be installed.
 
 * First point bucketName and key for terraform backend in bakcend.tf
