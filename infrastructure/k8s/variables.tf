@@ -41,7 +41,7 @@ variable "asg_max_instance" {
 
 }
 variable "worker_instance_type" {
-  default     = "t3.small"
+  default     = "t3.micro"
   description = "Aws Ec2/worker size type in eks "
 }
 
